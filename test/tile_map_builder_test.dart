@@ -91,5 +91,24 @@ void main() {
       expect(map.width, exclamation.length);
       expect(map.height, 2);
     });
+
+    test('.findFirst', () {
+      final map = builder.buildLines(['Elephant']);
+      final result = map.firstWhere((final tile) => tile == 'l');
+      if (result == null) {
+        throw StateError('Could not find tile.');
+      }
+      expect(result.point, const Point(1, 0));
+      expect(result.tile, 'l');
+    });
+
+    test('.where', () {
+      final map = builder.buildLines(['Elephants are not', 'zebras.']);
+      final a = map.where((final tile) => tile == 'a');
+      expect(a.length, 3);
+      expect(a[0].point, const Point(4, 0));
+      expect(a[1].point, const Point(5, 1));
+      expect(a[2].point, const Point(10, 1));
+    });
   });
 }

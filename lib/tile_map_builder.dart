@@ -3,3 +3,4 @@ library;
 
 export 'src/tile_map.dart';
 export 'src/tile_map_builder.dart';
+export 'src/tile_reference.dart';
