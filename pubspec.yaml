@@ -19,3 +19,4 @@ scripts:
   test:
     $before: rps clear
     $script: dart test
+  ex: dart run example/tile_map_builder_example.dart

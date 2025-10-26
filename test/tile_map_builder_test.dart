@@ -29,7 +29,7 @@ void main() {
     const exclamation = 'Dart is great.';
     final builder = TileMapBuilder(
       buildTile: (final point, final letter) => letter,
-      buildPadTile: (final point) => '\t',
+      buildOverflowTile: (final point) => '\t',
     );
 
     test('Lines of same length', () {
@@ -136,7 +136,7 @@ void main() {
       final builder = TileMapBuilder(
         buildTile: (final point, final letter) =>
             TerrainType.values.firstWhere((final t) => t.letter == letter),
-        buildPadTile: (final point) => TerrainType.forest,
+        buildOverflowTile: (final point) => TerrainType.forest,
       );
       final map = builder.buildLines(gameMap.split('\n'));
       const center = Point<int>(2, 2);

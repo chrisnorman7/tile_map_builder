@@ -8,7 +8,7 @@ class TileMapBuilder<T> {
   /// Create an instance.
   const TileMapBuilder({
     required this.buildTile,
-    required this.buildPadTile,
+    required this.buildOverflowTile,
     this.padCharacter = ';',
     this.commentCharacter = '#',
     this.repeatStart = ':',
@@ -18,8 +18,12 @@ class TileMapBuilder<T> {
   /// Convert `letter` into an instance of [T].
   final T Function(Point<int> point, String letter) buildTile;
 
-  /// The function which returns a tile to be used when a row needs padding.
-  final T Function(Point<int> point) buildPadTile;
+  /// The function which returns a tile to be used when the east side of the map
+  /// needs to be levelled off.
+  ///
+  /// The point provided is the location where the overflow tile will be
+  /// situated.
+  final T Function(Point<int> point) buildOverflowTile;
 
   /// The character which starts a comment line.
   ///
@@ -67,13 +71,14 @@ class TileMapBuilder<T> {
           throw ArgumentError('No matching $repeatEnd found on line ${i + 1}.');
         }
         final countString = line.substring(repeatStart.length, endIndex).trim();
-        final localCount = int.tryParse(countString);
-        if (localCount == null) {
+        line = line.substring(endIndex + 1);
+        final convertedCount = int.tryParse(countString);
+        if (convertedCount == null) {
           throw ArgumentError(
             'Invalid repeat count on line ${i + 1}: $countString.',
           );
         }
-        count = localCount;
+        count = convertedCount;
       } else {
         count = 1;
       }
@@ -83,7 +88,7 @@ class TileMapBuilder<T> {
           for (var x = 0; x < tiles.length; x++) {
             final row = tiles[x];
             while (row.length < maxLineLength) {
-              final padTile = buildPadTile(Point<int>(row.length, x));
+              final padTile = buildOverflowTile(Point<int>(row.length, x));
               row.add(padTile);
             }
           }
@@ -97,7 +102,9 @@ class TileMapBuilder<T> {
           row.add(tile);
         }
         while (row.length < maxLineLength) {
-          final padTile = buildPadTile(Point<int>(row.length, tiles.length));
+          final padTile = buildOverflowTile(
+            Point<int>(row.length, tiles.length),
+          );
           row.add(padTile);
         }
         tiles.add(row);
