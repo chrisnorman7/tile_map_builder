@@ -4,7 +4,7 @@ description: A library which lets you convert text files into rich tile maps.
 repository: https://github.com/chrisnorman7/tile_map_builder
 
 environment:
-  sdk: ^3.10.0-290.1.beta
+  sdk: ^3.9.2
 dependencies:
   characters: ^1.4.1
 
