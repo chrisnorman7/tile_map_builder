@@ -149,5 +149,13 @@ void main() {
       expect(last.point, const Point(3, 3));
       expect(last.tile, TerrainType.grass);
     });
+
+    test('Repeats', () {
+      final map = builder.buildLines([
+        'I know a song that will get on your nerves',
+        ':2:Get on your nerves.',
+      ]);
+      expect(map.height, 3);
+    });
   });
 }
