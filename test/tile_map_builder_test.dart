@@ -5,6 +5,7 @@ import 'package:tile_map_builder/src/tile_map_builder.dart';
 
 void main() {
   group('Tile maps', () {
+    const exclamation = 'Dart is great.';
     final builder = TileMapBuilder(
       buildTile: (final point, final letter) => letter,
       buildPadTile: (final point) => '\t',
@@ -72,6 +73,23 @@ void main() {
       expect(map.tileAt(const Point(4, 1)), 'o');
       expect(map.tileAt(const Point(5, 1)), '\t');
       expect(map.tileAt(const Point(6, 1)), null);
+    });
+
+    test('Ensure .size is correct', () {
+      final map = builder.buildLines([exclamation, 'Yes it is!']);
+      expect(map.width, exclamation.length);
+      expect(map.height, 2);
+    });
+
+    test('Map size with comments', () {
+      final map = builder.buildLines([
+        '# This is a comment.',
+        exclamation,
+        'Yes.',
+        '# Another comment.',
+      ]);
+      expect(map.width, exclamation.length);
+      expect(map.height, 2);
     });
   });
 }

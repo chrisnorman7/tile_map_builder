@@ -19,4 +19,10 @@ class TileMap<T> {
     }
     return row[point.x];
   }
+
+  /// Get the width of this tile map.
+  int get width => _tiles.isEmpty ? 0 : _tiles[0].length;
+
+  /// Get the height of this tile map.
+  int get height => _tiles.length;
 }
