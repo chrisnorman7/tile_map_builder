@@ -3,6 +3,27 @@ import 'dart:math';
 import 'package:test/test.dart';
 import 'package:tile_map_builder/src/tile_map_builder.dart';
 
+/// Pretend terrain types.
+enum TerrainType {
+  water('w'),
+  sand('s'),
+  grass('g'),
+  forest('f');
+
+  const TerrainType(this.letter);
+
+  /// The letter to use.
+  final String letter;
+}
+
+const gameMap = '''
+wwwwww
+wgggsw
+wsffsw
+wgggsw
+wwwwww
+''';
+
 void main() {
   group('Tile maps', () {
     const exclamation = 'Dart is great.';
@@ -109,6 +130,24 @@ void main() {
       expect(a[0].point, const Point(4, 0));
       expect(a[1].point, const Point(5, 1));
       expect(a[2].point, const Point(10, 1));
+    });
+
+    test('.tilesInRange', () {
+      final builder = TileMapBuilder(
+        buildTile: (final point, final letter) =>
+            TerrainType.values.firstWhere((final t) => t.letter == letter),
+        buildPadTile: (final point) => TerrainType.forest,
+      );
+      final map = builder.buildLines(gameMap.split('\n'));
+      const center = Point<int>(2, 2);
+      final tiles = map.tilesInRange(center, 1);
+      expect(tiles.length, 9);
+      final first = tiles.first;
+      expect(first.point, const Point(1, 1));
+      expect(first.tile, TerrainType.grass);
+      final last = tiles.last;
+      expect(last.point, const Point(3, 3));
+      expect(last.tile, TerrainType.grass);
     });
   });
 }
