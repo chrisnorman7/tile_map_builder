@@ -6,7 +6,7 @@ repository: https://github.com/chrisnorman7/tile_map_builder
 environment:
   sdk: ^3.9.2
 dependencies:
-  characters: ^1.4.1
+  characters: ^1.4.0
 
 dev_dependencies:
   lints: ^6.0.0
