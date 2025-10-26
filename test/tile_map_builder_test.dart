@@ -157,5 +157,12 @@ void main() {
       ]);
       expect(map.height, 3);
     });
+
+    test('Pad character', () {
+      final map = builder.buildLines([';;Hello', ';;;;;;;;;;world']);
+      expect(map.width, 5);
+      expect(map.tileAt(const Point(0, 0)), 'w');
+      expect(map.tileAt(const Point(0, 1)), 'H');
+    });
   });
 }
