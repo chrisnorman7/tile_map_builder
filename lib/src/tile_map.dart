@@ -43,8 +43,10 @@ class TileMap<T> {
   }
 
   /// Return the tiles within [range] of [point].
-  List<TileReference<T>> tilesInRange(final Point<int> point, final int range) {
-    final foundTiles = <TileReference<T>>[];
+  Iterable<TileReference<T>> tilesInRange(
+    final Point<int> point,
+    final int range,
+  ) sync* {
     for (var y = point.y - range; y <= point.y + range; y++) {
       if (y < 0 || y >= height) {
         continue;
@@ -56,11 +58,10 @@ class TileMap<T> {
         final point = Point(x, y);
         final tile = tileAt(point);
         if (tile != null) {
-          foundTiles.add(TileReference(point: point, tile: tile));
+          yield TileReference(point: point, tile: tile);
         }
       }
     }
-    return foundTiles;
   }
 
   /// Return all tile references which match [test].
