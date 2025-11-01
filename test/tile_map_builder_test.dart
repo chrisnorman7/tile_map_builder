@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:test/test.dart';
-import 'package:tile_map_builder/src/tile_map_builder.dart';
+import 'package:tile_map_builder/tile_map_builder.dart';
 
 /// Pretend terrain types.
 enum TerrainType {
@@ -163,6 +163,186 @@ void main() {
       expect(map.width, 5);
       expect(map.tileAt(const Point(0, 0)), 'w');
       expect(map.tileAt(const Point(0, 1)), 'H');
+    });
+  });
+
+  group('tilesInRange', () {
+    test('Range 0 returns only center tile', () {
+      const map = TileMap(
+        tiles: [
+          ['a', 'b', 'c'],
+          ['d', 'e', 'f'],
+          ['g', 'h', 'i'],
+        ],
+      );
+
+      final tiles = map.tilesInRange(const Point(1, 1), 0).toList();
+
+      expect(tiles.length, 1);
+      expect(tiles[0].point, const Point(1, 1));
+      expect(tiles[0].tile, 'e');
+    });
+
+    test('Range 1 returns 3x3 grid around center', () {
+      const map = TileMap(
+        tiles: [
+          ['a', 'b', 'c'],
+          ['d', 'e', 'f'],
+          ['g', 'h', 'i'],
+        ],
+      );
+
+      final tiles = map.tilesInRange(const Point(1, 1), 1).toList();
+
+      expect(tiles.length, 9);
+      expect(tiles[0].point, const Point(0, 0));
+      expect(tiles[0].tile, 'a');
+      expect(tiles[4].point, const Point(1, 1));
+      expect(tiles[4].tile, 'e');
+      expect(tiles[8].point, const Point(2, 2));
+      expect(tiles[8].tile, 'i');
+    });
+
+    test('Range at top-left corner', () {
+      const map = TileMap(
+        tiles: [
+          ['a', 'b', 'c'],
+          ['d', 'e', 'f'],
+          ['g', 'h', 'i'],
+        ],
+      );
+
+      final tiles = map.tilesInRange(const Point(0, 0), 1).toList();
+
+      expect(tiles.length, 4);
+      expect(tiles.map((final t) => t.point).toList(), [
+        const Point(0, 0),
+        const Point(1, 0),
+        const Point(0, 1),
+        const Point(1, 1),
+      ]);
+    });
+
+    test('Range at bottom-right corner', () {
+      const map = TileMap(
+        tiles: [
+          ['a', 'b', 'c'],
+          ['d', 'e', 'f'],
+          ['g', 'h', 'i'],
+        ],
+      );
+
+      final tiles = map.tilesInRange(const Point(2, 2), 1).toList();
+
+      expect(tiles.length, 4);
+      expect(tiles.map((final t) => t.point).toList(), [
+        const Point(1, 1),
+        const Point(2, 1),
+        const Point(1, 2),
+        const Point(2, 2),
+      ]);
+    });
+
+    test('Range larger than map', () {
+      const map = TileMap(
+        tiles: [
+          ['a', 'b'],
+          ['c', 'd'],
+        ],
+      );
+
+      final tiles = map.tilesInRange(const Point(0, 0), 5).toList();
+
+      expect(tiles.length, 4);
+      expect(tiles.map((final t) => t.tile).toList(), ['a', 'b', 'c', 'd']);
+    });
+
+    test('Point outside map bounds', () {
+      const map = TileMap(
+        tiles: [
+          ['a', 'b'],
+          ['c', 'd'],
+        ],
+      );
+
+      final tiles = map.tilesInRange(const Point(-1, -1), 1).toList();
+
+      expect(tiles.length, 1);
+      expect(tiles[0].point, const Point(0, 0));
+      expect(tiles[0].tile, 'a');
+    });
+
+    test('Empty map returns no tiles', () {
+      const map = TileMap<String>(tiles: []);
+
+      final tiles = map.tilesInRange(const Point(0, 0), 1).toList();
+
+      expect(tiles.length, 0);
+    });
+
+    test('Map with empty rows', () {
+      const map = TileMap<String>(tiles: [[]]);
+
+      final tiles = map.tilesInRange(const Point(0, 0), 1).toList();
+
+      expect(tiles.length, 0);
+    });
+
+    test('Results are ordered top-to-bottom, left-to-right', () {
+      const map = TileMap(
+        tiles: [
+          ['1', '2', '3'],
+          ['4', '5', '6'],
+          ['7', '8', '9'],
+        ],
+      );
+
+      final tiles = map.tilesInRange(const Point(1, 1), 1).toList();
+
+      final expectedOrder = [
+        const Point(0, 0),
+        const Point(1, 0),
+        const Point(2, 0),
+        const Point(0, 1),
+        const Point(1, 1),
+        const Point(2, 1),
+        const Point(0, 2),
+        const Point(1, 2),
+        const Point(2, 2),
+      ];
+
+      expect(tiles.map((final t) => t.point).toList(), expectedOrder);
+    });
+
+    test('Large range value', () {
+      const map = TileMap(
+        tiles: [
+          ['a', 'b'],
+          ['c', 'd'],
+        ],
+      );
+
+      final tiles = map.tilesInRange(const Point(0, 0), 100).toList();
+
+      expect(tiles.length, 4);
+    });
+
+    test('Range 2 with 5x5 map', () {
+      const map = TileMap(
+        tiles: [
+          ['a', 'b', 'c', 'd', 'e'],
+          ['f', 'g', 'h', 'i', 'j'],
+          ['k', 'l', 'm', 'n', 'o'],
+          ['p', 'q', 'r', 's', 't'],
+          ['u', 'v', 'w', 'x', 'y'],
+        ],
+      );
+
+      final tiles = map.tilesInRange(const Point(2, 2), 2).toList();
+
+      expect(tiles.length, 25); // All tiles in 5x5 map
+      expect(tiles.first.tile, 'a');
+      expect(tiles.last.tile, 'y');
     });
   });
 }
