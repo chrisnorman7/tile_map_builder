@@ -1,5 +1,5 @@
 name: tile_map_builder
-version: 0.0.1
+version: 0.1.0
 description: A library which lets you convert text files into rich tile maps.
 repository: https://github.com/chrisnorman7/tile_map_builder
 

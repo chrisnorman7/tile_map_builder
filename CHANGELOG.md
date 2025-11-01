@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0
+
+- Make `TileMap.where` return an `Iterable`.
+
 ## 0.0.1
 
 - Downgrade `characters`.

@@ -125,7 +125,7 @@ void main() {
 
     test('.where', () {
       final map = builder.buildLines(['Elephants are not', 'zebras.']);
-      final a = map.where((final tile) => tile == 'a');
+      final a = map.where((final tile) => tile == 'a').toList();
       expect(a.length, 3);
       expect(a[0].point, const Point(4, 0));
       expect(a[1].point, const Point(5, 1));

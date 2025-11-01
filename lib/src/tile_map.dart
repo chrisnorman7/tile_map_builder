@@ -64,17 +64,15 @@ class TileMap<T> {
   }
 
   /// Return all tile references which match [test].
-  List<TileReference<T>> where(final bool Function(T tile) test) {
-    final foundTiles = <TileReference<T>>[];
+  Iterable<TileReference<T>> where(final bool Function(T tile) test) sync* {
     for (var y = 0; y < _tiles.length; y++) {
       final row = _tiles[y];
       for (var x = 0; x < row.length; x++) {
         final tile = row[x];
         if (test(tile)) {
-          foundTiles.add(TileReference(point: Point(x, y), tile: tile));
+          yield TileReference(point: Point(x, y), tile: tile);
         }
       }
     }
-    return foundTiles;
   }
 }
